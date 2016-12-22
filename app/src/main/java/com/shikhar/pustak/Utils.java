@@ -1,6 +1,11 @@
 package com.shikhar.pustak;
 
+import android.text.TextUtils;
 import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,13 +15,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
 
     public static String LOG_TAG = Utils.class.getSimpleName();
 
-    public static List<Book> fetchBookData(String textEntered{
+    public static List<Book> fetchBookData(String textEntered){
 
         URL url = createURL(textEntered);
 
@@ -100,6 +106,42 @@ public class Utils {
         return output.toString();
     }
 
+    private static List<Book> extractFromJson(String bookJSON) {
+
+        List bookList = new ArrayList<>();
+
+        // If the JSON string is empty or null, then return early.
+        if (TextUtils.isEmpty(bookJSON)) {
+            return null;
+        }
+
+        try {
+            //converts JSON response which is in string to JSONObject
+            JSONObject baseJsonResponse = new JSONObject(bookJSON); //this call can throw system exception exactly like new URL(); in createUrl() function above. these are reported from the compiler,
+            // so i won't defer its handling by writing 'throws Exception' after the method signature. Better handle this type of exception here in the same code block like in createUrl() I have handled
+
+            JSONArray bookArray = baseJsonResponse.getJSONArray("items");
+
+            for(int i = 0; i < bookArray.length(); i++ ){
+                JSONObject currentBook = bookArray.getJSONObject(i);
+                JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
+
+                String bookTitle = volumeInfo.getString("title");
+                JSONArray authorsArray = volumeInfo.getJSONArray("authors");
+                String[] allAuthors = extractAllAuthors(authorsArray);
+
+                Book book = new Book(allAuthors,bookTitle);
+                bookList.add(book);
+
+            }
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "Problem parsing the Book JSON results", e);
+        }
+        return bookList;
+    }
+
+    private String[] extractAllAuthors(JSONArray authhorsArray){
     
+    }
 
 }
