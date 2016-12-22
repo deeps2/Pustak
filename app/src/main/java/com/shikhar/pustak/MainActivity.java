@@ -54,11 +54,15 @@ public class MainActivity extends AppCompatActivity {
         return activeNetwork.isConnectedOrConnecting();
     }
 
+    public String getText() {
+        return  mTextEntered.getText().toString();
+    }
+
     private class BookAsyncTask extends AsyncTask<Void, Void, List<Book>>{
         @Override
         protected List<Book> doInBackground(Void... voids) {
 
-            List<Book> result = Utils.fetchBookData(mTextEntered.getText().toString());
+            List<Book> result = Utils.fetchBookData(getText());
             return result;
 
         }
@@ -78,3 +82,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+

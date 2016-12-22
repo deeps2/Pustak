@@ -128,7 +128,7 @@ public class Utils {
 
                 String bookTitle = volumeInfo.getString("title");
                 JSONArray authorsArray = volumeInfo.getJSONArray("authors");
-                String[] allAuthors = extractAllAuthors(authorsArray);
+                String allAuthors = extractAllAuthors(authorsArray);
 
                 Book book = new Book(allAuthors,bookTitle);
                 bookList.add(book);
@@ -140,8 +140,22 @@ public class Utils {
         return bookList;
     }
 
-    private String[] extractAllAuthors(JSONArray authhorsArray){
-    
+    private static String extractAllAuthors(JSONArray authorsArray) throws JSONException{
+
+        String authorsList = null;
+
+        if (authorsArray.length() == 0) {
+            authorsList = "No Author Found";
+        }
+
+        for (int i = 0; i < authorsArray.length(); i++){
+            if (i == 0)
+                authorsList = authorsArray.getString(0);
+            else
+                authorsList = authorsList + ", " + authorsArray.getString(i);
+        }
+
+        return authorsList;
     }
 
 }

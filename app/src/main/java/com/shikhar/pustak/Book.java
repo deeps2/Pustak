@@ -2,15 +2,15 @@ package com.shikhar.pustak;
 
 public class Book {
 
-    private String[] mAuthors;
+    private String mAuthors;
     private String mTitle;
 
-    public Book(String[] writers, String book_name){
+    public Book(String writers, String book_name){
         mAuthors = writers;
         mTitle =  book_name;
     }
 
-    public String[] getAuthor() {
+    public String getAuthor() {
         return mAuthors;
     }
 
