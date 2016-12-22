@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.util.List;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button mFindButton;
     TextView mNotFound;
+    EditText mTextEntered;
 
     BookAdapter adapter;
 
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected List<Book> doInBackground(Void... voids) {
 
-            List<Book> result = Utils.fetchBookData();
+            List<Book> result = Utils.fetchBookData(mTextEntered.getText().toString());
             return result;
 
         }
