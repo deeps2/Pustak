@@ -2,11 +2,9 @@ package com.shikhar.pustak;
 
 import android.text.TextUtils;
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,32 +19,31 @@ import java.util.List;
 public class Utils {
 
     public static String LOG_TAG = Utils.class.getSimpleName();
+    static String mainURL = "https://www.googleapis.com/books/v1/volumes?q=search+";
 
-    public static List<Book> fetchBookData(String textEntered){
+    public static List<Book> fetchBookData(String textEntered) {
 
         URL url = createURL(textEntered);
 
-        String jsonRespnse = null;
+        String jsonResponse = null;
 
-        try{
-            jsonRespnse = makeHttpRequest(url);
-        }
-        catch (IOException e) {
+        try {
+            jsonResponse = makeHttpRequest(url);
+        } catch (IOException e) {
             Log.e(LOG_TAG, "Error closing input stream", e);
         }
 
-        List<Book> books = extractFromJson(jsonRespnse);
+        List<Book> books = extractFromJson(jsonResponse);
         return books;
     }
 
     private static URL createURL(String textEntered) {
 
         URL url = null;
-        String modifiedURL = textEntered.trim().replaceAll("\\s+","+");
+        String modifiedURL = textEntered.trim().replaceAll("\\s+", "+");
         try {
-            url = new URL(modifiedURL);
-        }
-        catch (MalformedURLException e){
+            url = new URL(mainURL + modifiedURL);
+        } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Error during creating URL ", e);
         }
         return url; //if fail then null will be returned as default is null
@@ -108,7 +105,7 @@ public class Utils {
 
     private static List<Book> extractFromJson(String bookJSON) {
 
-        List bookList = new ArrayList<>();
+        List<Book> bookList = new ArrayList<>();
 
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(bookJSON)) {
@@ -120,9 +117,14 @@ public class Utils {
             JSONObject baseJsonResponse = new JSONObject(bookJSON); //this call can throw system exception exactly like new URL(); in createUrl() function above. these are reported from the compiler,
             // so i won't defer its handling by writing 'throws Exception' after the method signature. Better handle this type of exception here in the same code block like in createUrl() I have handled
 
+            int count = baseJsonResponse.getInt("totalItems");
+            if (count == 0) {  //if total items is 0 means no book found
+                return null;
+            }
+
             JSONArray bookArray = baseJsonResponse.getJSONArray("items");
 
-            for(int i = 0; i < bookArray.length(); i++ ){
+            for (int i = 0; i < bookArray.length(); i++) {
                 JSONObject currentBook = bookArray.getJSONObject(i);
                 JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
 
@@ -130,7 +132,7 @@ public class Utils {
                 JSONArray authorsArray = volumeInfo.getJSONArray("authors");
                 String allAuthors = extractAllAuthors(authorsArray);
 
-                Book book = new Book(allAuthors,bookTitle);
+                Book book = new Book(allAuthors, bookTitle);
                 bookList.add(book);
 
             }
@@ -140,17 +142,17 @@ public class Utils {
         return bookList;
     }
 
-    private static String extractAllAuthors(JSONArray authorsArray) throws JSONException{
+    // To extract array of authors and concatenate all author names like "- author1,author2,author3" in a single string
+    private static String extractAllAuthors(JSONArray authorsArray) throws JSONException {
 
         String authorsList = null;
 
-        if (authorsArray.length() == 0) {
+        if (authorsArray.length() == 0)
             authorsList = "No Author Found";
-        }
 
-        for (int i = 0; i < authorsArray.length(); i++){
+        for (int i = 0; i < authorsArray.length(); i++) {
             if (i == 0)
-                authorsList = authorsArray.getString(0);
+                authorsList = "- " + authorsArray.getString(0);
             else
                 authorsList = authorsList + ", " + authorsArray.getString(i);
         }

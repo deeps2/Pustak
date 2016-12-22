@@ -7,12 +7,12 @@
     tools:context="com.shikhar.pustak.MainActivity">
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/search_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Topic for which book you want "
-        android:layout_toLeftOf="@+id/seach_button"
         android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/seach_button"
+        android:hint="Topic for which book you want "
         android:inputType="text"
         android:paddingLeft="16dp" />
 
@@ -20,28 +20,36 @@
         android:id="@+id/seach_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Find"
         android:layout_alignParentRight="true"
-        android:paddingRight="16dp" />
+        android:paddingRight="16dp"
+        android:text="Find" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/search_box"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/no_book_or_internet_found"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:layout_below="@+id/search_box"
         android:gravity="center"
-        android:textColor="@color/colorAccent"
-        android:visibility="gone"
-        tools:visibility="visible"
+        android:padding="16dp"
         android:text="Sorry, Couldn't find anything relevant :-("
+        android:textColor="@color/colorAccent"
         android:textSize="18sp"
-        android:layout_below="@+id/editText" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <ListView
         android:id="@+id/list_items"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/no_book_or_internet_found">
-    </ListView>
+        android:layout_below="@+id/no_book_or_internet_found"
+        android:paddingTop="8dp" />
 
 </RelativeLayout>

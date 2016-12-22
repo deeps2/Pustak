@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import java.util.Arrays;
 
 public class BookAdapter extends ArrayAdapter<Book> {
 
@@ -19,9 +18,8 @@ public class BookAdapter extends ArrayAdapter<Book> {
 
         Book book = getItem(position);
 
-        if (view == null){
-            view = LayoutInflater.from(getContext()).inflate(
-                    R.layout.list_items, parent, false);
+        if (view == null) {
+            view = LayoutInflater.from(getContext()).inflate(R.layout.list_items, parent, false);
         }
 
         TextView title = (TextView) view.findViewById(R.id.book_name);
