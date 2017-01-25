@@ -10,7 +10,8 @@ Components Used
 AsyncTask</br>
 ListView</br>
 Custom ArrayAdapter</br>
-Google Books API
+Google Books API</br>
+Methods for creating URL, making HTTP request and Parsing JSON response
 
 ScreenShots
 ------------
